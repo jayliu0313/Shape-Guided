@@ -1,7 +1,7 @@
 # Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection
 
 ## Installation
-
+You can execute the following command.
 ### git clone
 ```
 git clone https://github.com/jayliu0313/Shape-Guided.git
