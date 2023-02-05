@@ -13,6 +13,8 @@ conda create --name myenv python=3.6
 conda activate myenv
 pip install requirement.txt
 ```
-### download dataset
+### download dataset & preprocessing
 ```
+mkdir MVTec3DAD && cd MVTec3DAD
+
 ```
