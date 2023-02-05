@@ -1,0 +1,12 @@
+numpy
+Pillow
+scikit-learn
+scikit-image
+scipy
+sklearn
+timm
+open3d==0.9
+tqdm
+wget
+tifffile
+kornia
