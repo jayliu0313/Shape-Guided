@@ -4,9 +4,9 @@
 
 ## Installation
 ### Requirement
-Linux (Ubuntu 16.04)
-Python 3.6+
-PyTorch 1.7 or higher
+Linux (Ubuntu 16.04)  
+Python 3.6+  
+PyTorch 1.7 or higher  
 CUDA 10.2 or higher
 
 ### create environment
