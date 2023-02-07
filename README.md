@@ -1,7 +1,14 @@
 # Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection
 
+
+
 ## Installation
-You can execute the following command.
+### Requirement
+Linux (Ubuntu 16.04)
+Python 3.6+
+PyTorch 1.7 or higher
+CUDA 10.2 or higher
+
 ### create environment
 ```
 git clone https://github.com/jayliu0313/Shape-Guided.git
