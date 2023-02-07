@@ -18,3 +18,14 @@ pip install requirement.txt
 mkdir MVTec3DAD && cd MVTec3DAD
 
 ```
+
+It will take few minutes to remove the backgoround of the point cloud. 
+### preprocessing
+```
+python tools/preprocessing.py DATASET_PATH
+python cut_grid.py
+```
+
+### training 3D expert model
+```
+```
