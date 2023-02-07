@@ -35,7 +35,7 @@ python pretrain.py --grid_path GRID_PATH
 python train_memory.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 
 ## Reference
-Our memory architecture is refer to https://github.com/eliahuhorwitz/3D-ADS
+Our memory architecture is refer to https://github.com/eliahuhorwitz/3D-ADS  
 3D expert model is modified from https://github.com/mabaorui/PredictableContextPrior
 
 
