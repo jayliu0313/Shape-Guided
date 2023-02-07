@@ -28,13 +28,13 @@ It will take few minutes to remove the backgoround of the point cloud, and point
 ### Preprocessing
 ```
 python tools/preprocessing.py DATASET_PATH
-python cut_grid.py --save_grid_path GRID_PATH
+python cut_patches.py --save_grid_path GRID_PATH
 ```
 
 There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
 ### Train Our 3D Expert Model
 ```
-python pretrain.py --grid_path GRID_PATH
+python train_3Dmodel.py --grid_path GRID_PATH
 ```
 
 ### Train memory and Testing
