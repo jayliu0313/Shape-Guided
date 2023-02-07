@@ -10,6 +10,7 @@ conda create --name myenv python=3.6
 conda activate myenv
 pip install requirement.txt
 ```
+
 ### Download Dataset & Preprocessing
 ```
 mkdir MVTec3DAD && cd MVTec3DAD
@@ -22,6 +23,7 @@ It will take few minutes to remove the backgoround of the point cloud, and point
 python tools/preprocessing.py DATASET_PATH
 python cut_grid.py --save_grid_path GRID_PATH
 ```
+
 There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
 ### Train Our 3D Expert Model
 ```
@@ -29,7 +31,9 @@ python pretrain.py --grid_path GRID_PATH
 ```
 
 ### Train memory and Testing
+```
 python train_memory.py --datasets_path DATASET_PATH --grid_path GRID_PATH
+```
 
 ## Reference
 Our memory architecture is refer to https://github.com/eliahuhorwitz/3D-ADS  
