@@ -21,9 +21,9 @@ pip install requirement.txt
 ### Download Dataset & Preprocessing
 ```
 mkdir MVTec3DAD && cd MVTec3DAD
-
 ```
 
+## Implementation
 It will take few minutes to remove the backgoround of the point cloud, and point cloud will be divided into multiple grid for each instance. 
 ### Preprocessing
 ```
