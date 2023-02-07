@@ -27,7 +27,7 @@ else:
     parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_preprocessing/")                   #"The dir path of mvtec3D-AD dataset"
     parser.add_argument('--grid_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_cut_grid/imgsize224_knn500/gm10_sampled20/")                 #The dir path of grid you cut, it would include training npz, testing npz
 
-parser.add_argument('--ckpt_dir', type=str, default="/home/jayliu0313/shape_guide_pytorch/checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
+parser.add_argument('--ckpt_dir', type=str, default="./checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
 parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
 
 # others

@@ -5,7 +5,7 @@ import open3d as o3d
 from pathlib import Path
 from PIL import Image
 import math
-import mvtec3d_util as mvt_util
+import utils.mvtec3d_util as mvt_util
 import argparse
 
 
@@ -128,14 +128,12 @@ def preprocess_pc(tiff_path):
 
 
 if __name__ == '__main__':
-    '''
+    
     parser = argparse.ArgumentParser(description='Preprocess MVTec 3D-AD')
     parser.add_argument('dataset_path', type=str,required=True , help='The root path of the MVTec 3D-AD. The preprocessing is done inplace (i.e. the preprocessed dataset overrides the existing one)')
     args = parser.parse_args()
-    '''
-
-    #root_path = args.dataset_path
-    root_path = "/mnt/home_6T/public/jayliu0313/datasets/mvtec3d_preprocessing/"
+    
+    root_path = args.dataset_path
     paths = Path(root_path).rglob('*.tiff')
     print(f"Found {len(list(paths))} tiff files in {root_path}")
     processed_files = 0
