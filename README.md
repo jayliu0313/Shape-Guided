@@ -19,13 +19,13 @@ mkdir MVTec3DAD && cd MVTec3DAD
 
 ```
 
-It will take few minutes to remove the backgoround of the point cloud, and point clouds are divided into multiple grids for each instance. 
+It will take few minutes to remove the backgoround of the point cloud, and point cloud will be divided into multiple grid for each instance. 
 ### preprocessing
 ```
 python tools/preprocessing.py DATASET_PATH
 python cut_grid.py --save_grid_path GRID_PATH
 ```
-
+There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
 ### train 3D expert model
 ```
 python pretrain.py --grid_path GRID_PATH
