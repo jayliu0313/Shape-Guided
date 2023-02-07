@@ -10,25 +10,25 @@ conda create --name myenv python=3.6
 conda activate myenv
 pip install requirement.txt
 ```
-### download dataset & preprocessing
+### Download Dataset & Preprocessing
 ```
 mkdir MVTec3DAD && cd MVTec3DAD
 
 ```
 
 It will take few minutes to remove the backgoround of the point cloud, and point cloud will be divided into multiple grid for each instance. 
-### preprocessing
+### Preprocessing
 ```
 python tools/preprocessing.py DATASET_PATH
 python cut_grid.py --save_grid_path GRID_PATH
 ```
 There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
-### train 3D expert model
+### Train Our 3D Expert Model
 ```
 python pretrain.py --grid_path GRID_PATH
 ```
 
-### train memory and implement inference
+### Train memory and Testing
 python train_memory.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 
 ## Reference
