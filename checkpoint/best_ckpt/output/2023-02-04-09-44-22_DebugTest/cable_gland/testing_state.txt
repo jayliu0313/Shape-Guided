@@ -1,0 +1,23 @@
+Optimal DET Threshold: 52.69
+Optimal SEG Threshold: 0.02
+Class: cable_gland, RGB_SDF Image ROCAUC: 0.500, RGB_SDF Pixel ROCAUC: 0.991, RGB_SDF                 AU-PRO 0.3: 0.965
+                 AU-PRO 0.2: 0.948
+                 AU-PRO 0.1: 0.899
+                 AU-PRO 0.07: 0.861
+                 AU-PRO 0.05: 0.814
+                 AU-PRO 0.03: 0.716
+                 AU-PRO 0.01: 0.389
+Class: cable_gland, RGB Image ROCAUC: 0.833, RGB Pixel ROCAUC: 0.983, RGB                 AU-PRO 0.3: 0.947
+                 AU-PRO 0.2: 0.920
+                 AU-PRO 0.1: 0.842
+                 AU-PRO 0.07: 0.783
+                 AU-PRO 0.05: 0.707
+                 AU-PRO 0.03: 0.575
+                 AU-PRO 0.01: 0.304
+Class: cable_gland, SDF Image ROCAUC: 0.333, SDF Pixel ROCAUC: 0.950, SDF                 AU-PRO 0.3: 0.828
+                 AU-PRO 0.2: 0.742
+                 AU-PRO 0.1: 0.553
+                 AU-PRO 0.07: 0.481
+                 AU-PRO 0.05: 0.418
+                 AU-PRO 0.03: 0.340
+                 AU-PRO 0.01: 0.175
