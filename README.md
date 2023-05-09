@@ -18,10 +18,8 @@ conda activate myenv
 pip install requirement.txt
 ```
 
-### Download Dataset & Preprocessing
-```
-mkdir MVTec3DAD && cd MVTec3DAD
-```
+### MvTec3D-AD Dataset
+[Here]https://www.mvtec.com/company/research/datasets/mvtec-3d-ad to download dataset
 
 ## Implementation
 It will take few minutes to remove the backgoround of the point cloud, and point cloud will be divided into multiple patches for each instance. 
