@@ -36,6 +36,7 @@ python train_3Dmodel.py --grid_path GRID_PATH
 ```
 
 ### Buid Memory and Testing
+The result will be stored in the output directory.
 ```
 python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 ```
