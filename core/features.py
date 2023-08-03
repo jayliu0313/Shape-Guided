@@ -8,6 +8,8 @@ from sklearn.metrics import roc_auc_score
 from utils.au_pro_util import calculate_au_pro
 from sklearn.decomposition import sparse_encode
 from utils.visualize_util import visualize_smap_distribute, visualize_image_s_distribute
+from ptflops import get_model_complexity_info
+
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
 
@@ -68,6 +70,11 @@ class Features(torch.nn.Module):
 
     def predict(self, sample, mask, label):
         raise NotImplementedError
+
+    def count_your_model(model, input):
+        flops, params = get_model_complexity_info(model, input, as_strings=True, print_per_layer_stat=True)
+        print('Flops: ' + flops)
+        print('Params: ' + params)
 
     def foreground_subsampling(self): 
         self.sdf_patch_lib = torch.cat(self.sdf_patch_lib, 0)
@@ -249,7 +256,7 @@ class RGB_Model(torch.nn.Module):
             fmap = self.avg_pool(fmap)
             fmap = torch.flatten(fmap, 1)
             features.append(fmap)
-
+        
         return features
 
     def freeze_parameters(self, layers, freeze_bn=False):
@@ -300,3 +307,10 @@ class RGB_Model(torch.nn.Module):
                     module.eval()
                 if isinstance(module, torch.nn.modules.BatchNorm3d):
                     module.eval()
+
+if __name__ == '__main__':
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    rgb_model = RGB_Model(device)
+    flops, params = get_model_complexity_info(rgb_model, (3, 224, 224), as_strings=True, print_per_layer_stat=True)
+    print('Flops: ' + flops)
+    print('Params: ' + params)

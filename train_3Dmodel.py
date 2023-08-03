@@ -15,32 +15,21 @@ from utils.utils import *
 
 ################################### 指令 #################################
 
-# python3 pretrain_pcp.py --CUDA 0
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
 parser.add_argument('--point_num', type=int, default=500)  # For one local region include how many points, and it would input to the model
 parser.add_argument('--group_mul', type=int, default=5)
 parser.add_argument('--sampled_size', type=int, default=20)
-parser.add_argument('--grid_path', type=str, default = "/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_cut_grid/imgsize224_knn500/gm5_sampled20_new_cut/")
+parser.add_argument('--grid_path', type=str, default = "grid_dir")
 parser.add_argument('--ckpt_dir', type=str, default = "./checkpoint") # auto recreate if exist
-CKPT_FILENAME = "TEST"
+CKPT_FILENAME = "knn500"
 parser.add_argument('--CUDA', type=int, default=0)
 parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument("--save_idx", type=int, default=-1)
 parser.add_argument("--learning_rate", type=int, default=0.0001)
 classes = [
-        "bagel",
-        #"cable_gland",
-        #"carrot",
-        #"cookie",
-        #"dowel",
-        #"foam",
-        #"peach",
-        #"potato",
-        #"rope",
-        #"tire",
-        #"*"
-        ]  # load category
+"*"
+]  # load category
 
 a = parser.parse_args()
 cuda_idx = str(a.CUDA)
@@ -86,7 +75,7 @@ class Pretraining():
     def train(self, pretrain_loader):
         buf_size = 1  # Make 'training_stats' file to flush each output line regarding training.
         log_file = open(osp.join(self.ckpt_dir, "train_states.txt"), "a", buf_size)
-        for epoch in range(3001):
+        for epoch in range(1001):
             loss_list = []
             for points, samples in tqdm(pretrain_loader, desc=f'Pre-Training Epoch: {epoch}'):
                 if points.shape[0] != self.BS:

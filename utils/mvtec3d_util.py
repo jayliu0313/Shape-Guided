@@ -2,6 +2,7 @@ import tifffile as tiff
 import torch
 import numpy as np
 
+
 def orgpc_to_unorgpc(organized_pc):
     organized_pc_np = organized_pc.squeeze().permute(1, 2, 0).numpy()
     unorganized_pc = organized_pc_to_unorganized_pc(organized_pc=organized_pc_np)

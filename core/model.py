@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from torch.autograd import Variable
+from ptflops import get_model_complexity_info
 import torchvision
 import torch.nn.functional as F
 import torch.nn as nn
@@ -119,9 +120,18 @@ class SDF_Model(nn.Module):
         for p in self.NIF.parameters():
             p.requires_grad_(False)
 
+def prepare_input(resolution):
+    x1 = torch.FloatTensor(1, 500, 3)
+    x2 = torch.FloatTensor(1, 500, 3)
+    return dict(gt = x1, input_points = x2)
+ 
 if __name__ == '__main__':
     gt = Variable(torch.rand(32, 500, 3))
     sampled_point = Variable(torch.rand(32, 500, 3),  requires_grad=True)
     sdf_model = SDF_Model(500)
+
+    flops, params = get_model_complexity_info(sdf_model, (1, 500, 3), input_constructor=prepare_input, as_strings=True, print_per_layer_stat=True)
+    print('Flops: ' + flops)
+    print('Params: ' + params)
     # optimizer = optim.Adam(sdf_model.parameters(), lr=0.0001, betas=(0.9, 0.999))
-    print(sdf_model(gt, sampled_point))
+    # print(sdf_model(gt, sampled_point))

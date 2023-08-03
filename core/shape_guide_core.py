@@ -78,8 +78,6 @@ class ShapeGuide():
         self.datasets_path = conf.datasets_path
         self.grid_path = conf.grid_path
         self.ckpt_dir = conf.ckpt_dir
-        self.save_idx = conf.save_idx
-        self.save_pc = conf.save_pc
         self.parent_dir = conf.output_dir
         self.output_dir = os.path.join(conf.output_dir, class_name)
         self.sdf = conf.sdf
@@ -88,8 +86,6 @@ class ShapeGuide():
         # Create class dir and pc dir
         if not osp.exists(self.output_dir):
             os.makedirs(self.output_dir)
-        if self.save_pc:
-            os.makedirs(os.path.join(self.output_dir, "Save_PC_Result"))
 
         # create writer
         buf_size = 1  # Make 'testing_state' file to flush each output line regarding training.

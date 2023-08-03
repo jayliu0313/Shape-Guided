@@ -11,43 +11,35 @@ from utils.utils import list_join
 
 parser = argparse.ArgumentParser()
 # model setup
-parser.add_argument('--image_size', type=int, default=224, help="Reduced 800*800 pc to n*n by interpolate")
-parser.add_argument('--point_num', type=int, default=500, help="The Number of pc for a local region, and it would input to the model")
+parser.add_argument('--image_size', type=int, default=224, help="Reduced 800*800 image size to n*n by interpolate")
+parser.add_argument('--point_num', type=int, default=500, help="The Number of pc for each 3D patch")
+
+FILENAME = "group500"
+# path setup
+parser.add_argument('--datasets_path', type=str, default="dataset_dir", help="The dir path of mvtec3D-AD dataset")
+parser.add_argument('--grid_path', type=str, default="npz_dir", help="The dir path of grid you cut, it would include training npz, testing npz")
+parser.add_argument('--ckpt_dir', type=str, default="checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
+parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
+
+# others
+parser.add_argument('--CUDA', type=int, default=0, help="choose the device of CUDA")
+
+class_name = [
+    "bagel",
+    "cable_gland",
+    "carrot",
+    "cookie",
+    "dowel",
+    "foam",
+    "peach",
+    "potato",
+    "rope",
+    "tire"
+    ]  # load category
 
 # It's changes will not affect training and testing
 parser.add_argument('--group_mul', type=int, default=10, help="The group_mul multiplied by point_num is the number of groups")
 parser.add_argument('--sampled_size', type=int, default=20, help="The Number of sampled queary point for pretrain")
-DEBUG = True
-FILENAME = "Test"
-# path setup
-if DEBUG:
-    parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Test/not_cut/", help="The dir path of mvtec3D-AD dataset")
-    parser.add_argument('--grid_path', type=str, default="/mnt/home_6T/public/samchu0218/Test/cut/imgsize224_knn500/gm10_sampled20/", help="The dir path of grid you cut, it would include training npz, testing npz")
-else:
-    parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_preprocessing/")                   #"The dir path of mvtec3D-AD dataset"
-    parser.add_argument('--grid_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_cut_grid/imgsize224_knn500/gm10_sampled20/")                 #The dir path of grid you cut, it would include training npz, testing npz
-
-parser.add_argument('--ckpt_dir', type=str, default="./checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
-parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
-
-# others
-parser.add_argument('--CUDA', type=int, default=1, help="choose the device of CUDA")
-if DEBUG:
-    class_name = ["cable_gland"]
-else:
-    class_name = [
-        "bagel",
-        "cable_gland",
-        "carrot",
-        "cookie",
-        "dowel",
-        "foam",
-        "peach",
-        "potato",
-        "rope",
-        "tire"
-        ]  # load category
-
 
 a = parser.parse_args()
 cuda_idx = str(a.CUDA)
@@ -76,8 +68,7 @@ conf.dict_n_component = 3
 time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 conf.output_dir = os.path.join(a.output_dir, time)
-if DEBUG:
-    conf.output_dir = conf.output_dir + "_Debug"
+
 conf.output_dir = conf.output_dir + FILENAME
 if not osp.exists(conf.output_dir):
     os.makedirs(conf.output_dir)
