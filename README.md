@@ -23,6 +23,7 @@ pip install requirement.txt
 
 ## Implementation
 It will take few minutes to remove the backgoround of the point cloud, and point cloud will be divided into multiple patches for each instance. 
+If you cut patches for pretrain, you need to change the variable "is_pretrained" in cut_patch.py to true.
 ### Preprocessing
 ```
 python tools/preprocessing.py DATASET_PATH
