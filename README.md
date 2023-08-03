@@ -30,7 +30,7 @@ python tools/preprocessing.py DATASET_PATH
 python cut_patches.py --save_grid_path GRID_PATH
 ```
 
-There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
+There is the best_ckpt in ./checkpoint, or you can train the model by yourself, and you need to cut the pretrain grid in cut_patches.py.
 ### Train Our 3D Expert Model
 ```
 python train_3Dmodel.py --grid_path GRID_PATH
