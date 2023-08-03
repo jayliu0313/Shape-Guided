@@ -1,5 +1,5 @@
-# Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection (ICML2023)
-[Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
+# Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection (ICML2023) [Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
+
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
 ## Installation
 ### Requirement
