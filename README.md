@@ -1,6 +1,6 @@
 # Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection (ICML2023)
 [Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
-
+![image](img\complementary_heatmap.png)
 ## Installation
 ### Requirement
 Linux (Ubuntu 16.04)  
