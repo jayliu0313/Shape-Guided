@@ -35,9 +35,9 @@ There is the best_ckpt in ./checkpoint, or you can train the model by yourself.
 python train_3Dmodel.py --grid_path GRID_PATH
 ```
 
-### Train memory and Testing
+### Buid Memory and Testing
 ```
-python train_memory.py --datasets_path DATASET_PATH --grid_path GRID_PATH
+python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 ```
 
 ## Reference
