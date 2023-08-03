@@ -17,17 +17,17 @@ from utils.pointnet_util import sample_and_group
 IS_PRTRAIN = False
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
-parser.add_argument('--point_num', type=int, default=250)  # number of the points in the knn group.
-parser.add_argument('--group_mul', type=int, default=10)     # The sample points is n times more than the original points
+parser.add_argument('--point_num', type=int, default=500)  # number of the points in the knn group.
+# parser.add_argument('--group_mul', type=int, default=10)     # The sample points is n times more than the original points
 parser.add_argument('--sample_num', type=int, default=20)   # random sample fake points from for pretraining
-parser.add_argument('--save_grid_path', type=str, default="/mnt/home_6T/public/jayliu0313/datasets/mvtec3d_cut_grid/imgsize224_knn250/all_data_gm3_sampled20/") # save here
+parser.add_argument('--save_grid_path', type=str, default="save_grid_path") # save here, pretrain ,train, test grid need to save in the same dir.
 if IS_PRTRAIN:
     parser.add_argument('--group_mul', type=int, default=5)     # The sample points is n times more than the original points
-    parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/custom_cut_grid/")
+    parser.add_argument('--datasets_path', type=str, default="dataset_path")
     classes = ["*"]
 else:
     parser.add_argument('--group_mul', type=int, default=10)     # The sample points is n times more than the original points
-    parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_preprocessing/")
+    parser.add_argument('--datasets_path', type=str, default="dataset_path")
     classes = [
             "bagel",
             "cable_gland",
