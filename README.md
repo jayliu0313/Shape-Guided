@@ -1,5 +1,7 @@
 # Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection (ICML2023) [Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/rgb-3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/rgb-3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
+
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
 ## Installation
 ### Requirement
@@ -40,9 +42,6 @@ The result will be stored in the output directory.
 ```
 python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 ```
-
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/rgb-3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/rgb-3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
-
 ## Reference
 Our memory architecture is refer to https://github.com/eliahuhorwitz/3D-ADS  
 3D expert model is modified from https://github.com/mabaorui/PredictableContextPrior
