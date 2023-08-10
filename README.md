@@ -41,6 +41,18 @@ The result will be stored in the output directory.
 python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH
 ```
 
+## Citation
+If our paper is useful for your research, please cite our paper. Thank you!
+'''
+@InProceedings{pmlr-v202-chu23b,
+  title = {Shape-Guided Dual-Memory Learning for 3D Anomaly Detection},
+  author = {Chu, Yu-Min and Liu, Chieh and Hsieh, Ting-I and Chen, Hwann-Tzong and Liu, Tyng-Luh},
+  booktitle = {Proceedings of the 40th International Conference on Machine Learning},
+  pages = {6185--6194},
+  year = {2023},
+}
+'''
+
 ## Reference
 Our memory architecture is refer to https://github.com/eliahuhorwitz/3D-ADS  
 3D expert model is modified from https://github.com/mabaorui/PredictableContextPrior
