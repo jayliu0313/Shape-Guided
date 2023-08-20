@@ -107,7 +107,6 @@ class SDF_Model(nn.Module):
 
     def get_feature(self, point):
         point = torch.permute(point, (0, 2, 1))
-        # print("model feature", point.shape)
         return self.encoder(point)
 
     def get_sdf(self, point_feature, input_points):
@@ -133,5 +132,3 @@ if __name__ == '__main__':
     flops, params = get_model_complexity_info(sdf_model, (1, 500, 3), input_constructor=prepare_input, as_strings=True, print_per_layer_stat=True)
     print('Flops: ' + flops)
     print('Params: ' + params)
-    # optimizer = optim.Adam(sdf_model.parameters(), lr=0.0001, betas=(0.9, 0.999))
-    # print(sdf_model(gt, sampled_point))

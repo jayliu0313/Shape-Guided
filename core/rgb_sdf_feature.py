@@ -31,7 +31,9 @@ class RGBSDF(object):
 
             points = points_all[patch].reshape(-1, self.POINT_NUM, 3)
             indices = points_idx[patch].reshape(self.POINT_NUM)
+            # compute the correspoding location of rgb features
             rgb_f_indices = get_relative_rgb_f_indices(indices, self.image_size, 28)
+            # extract sdf features
             feature = self.sdf_model.get_feature(points.to(self.device))
             
             if patch == 0:
@@ -95,20 +97,20 @@ class RGBSDFFeatures(Features):
         rgb_patch_size28 = rgb_patch.reshape(rgb_patch.shape[1], -1).T
         ############### END RGB PATCH ###############
 
-        ############### PCP PATCH ###############
+        ############### SDF Patch ###############
         sdf_feature, rgb_feature_indices_patch = sdf.get_feature(sample[1], sample[2], train_data_id, 'train')
-        ############### END PCP PATCH ###############
+        ############### END SDF PATCH ###############
         self.sdf_patch_lib.append(sdf_feature.to('cpu'))
         self.rgb_patch_lib.append(rgb_patch_size28.to('cpu'))
         self.rgb_f_idx_patch_lib.extend(rgb_feature_indices_patch)
 
     def predict(self, sdf, sample, mask, label, test_data_id):
         
-        ############### PCP PATCH ###############
+        ############### SDF PATCH ###############
         feature, rgb_features_indices = sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
         NN_feature, Dict_features, lib_idices, sdf_s = self.Find_KNN_feature(feature)
         sdf_map = sdf.get_score_map(Dict_features, sample[1], sample[2])
-        ############### END PCP PATCH ###########
+        ############### END SDF PATCH ###########
 
         ############### RGB PATCH ###############
         rgb_feature_maps = self(sample[0])
@@ -143,11 +145,11 @@ class RGBSDFFeatures(Features):
         self.pixel_preds.extend(pixel_map.flatten().numpy())
 
     def predict_align_data(self, sdf, sample, label, test_data_id):
-        ############### PCP PATCH ###############
+        ############### SDF PATCH ###############
         feature, rgb_features_indices = sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
         NN_feature, Dict_features, lib_idices, sdf_s = self.Find_KNN_feature(feature, mode='alignment')
         sdf_map = sdf.get_score_map(Dict_features, sample[1], sample[2])
-        ############### END PCP PATCH ###########
+        ############### END SDF PATCH ###########
 
         ############### RGB PATCH ###############
         rgb_feature_maps = self(sample[0])
