@@ -1,3 +1,4 @@
+<meta name="google-site-verification" content="RAL5KyGRWjjA5AdzGbDHGexz0ntRLhEj6enu5kdnmDc" />
 # Shape-Guided: Shape-Guided Dual-Memory Learning for 3D Anomaly Detection (ICML2023)
 ### [Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
