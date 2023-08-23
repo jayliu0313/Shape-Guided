@@ -3,8 +3,8 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/rgb-3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/rgb-3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
-We utilize the information of the RGB and the 3D point cloud to detect anomaly and complement each other. <br/>
-Here SDF means the method of 3D point cloud.
+We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other. <br/>
+Signed Distance Function(SDF) means the method we estimate the point cloud to detect anomaly. <br/>
 ## Installation
 ### Requirement
 Linux (Ubuntu 16.04)  
