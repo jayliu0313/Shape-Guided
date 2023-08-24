@@ -25,9 +25,10 @@ pip install requirement.txt
 [Here](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad) to download dataset
 
 ## Implementation
-It will take few minutes to remove the backgoround of the point cloud by preprocessing.py, and point cloud will be divided into multiple patches for each instance in cut_patches.py. <br/>
 
 ### Preprocessing
+It will take few minutes to remove the backgoround of the point cloud by preprocessing.py, and point cloud will be divided into multiple patches for each instance in cut_patches.py. <br/>
+
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 *If you cut patches for pretrain, you need to change the variable "is_pretrained" to true in ```cut_patch.py```.* <br/>
 ```
