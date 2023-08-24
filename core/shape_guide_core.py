@@ -105,7 +105,7 @@ class ShapeGuide():
         with torch.no_grad():
             for align_data_id, (sample, _) in enumerate(tqdm(self.data_loader, desc=f'Extracting aligned features for class {self.class_name}')):
                 if align_data_id < 25:
-                    self.methods.predict_align_data(self.sdf, sample, None, align_data_id)
+                    self.methods.predict_align_data(self.sdf, sample, align_data_id)
                 else: 
                     break
 

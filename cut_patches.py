@@ -18,7 +18,6 @@ IS_PRTRAIN = False
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
 parser.add_argument('--point_num', type=int, default=500)  # number of the points in the knn group.
-# parser.add_argument('--group_mul', type=int, default=10)     # The sample points is n times more than the original points
 parser.add_argument('--sample_num', type=int, default=20)   # random sample fake points from for pretraining
 parser.add_argument('--save_grid_path', type=str, default="save_grid_path") # save here, pretrain ,train, test grid need to save in the same dir.
 if IS_PRTRAIN:
@@ -310,7 +309,7 @@ def split_patch(split, input_file, save_path):
 
 if __name__ == '__main__':
     print(torch.__version__)
-    print("start to get patch!!")
+    print("Start to get patch")
     for cls in classes:
         print('Class:',cls)
         if IS_PRTRAIN:

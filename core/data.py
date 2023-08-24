@@ -9,6 +9,7 @@ from utils.mvtec3d_util import *
 from utils.utils import * 
 from torch.utils.data import Dataset, DataLoader
 
+
 class MVTec3D(Dataset):
     def __init__(self, split, class_name, img_size, datasets_path, grid_path):
         self.IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -126,7 +127,6 @@ class MVTec3DTest(MVTec3D):
             gt = Image.open(gt).convert('L')
             gt = self.gt_transform(gt)
             gt = torch.where(gt > 0.5, 1., .0)
-
         return (img, points_gt_all, points_idx_all), gt[:1], label
 
 class MVTec3DValidation(MVTec3D):

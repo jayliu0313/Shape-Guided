@@ -9,7 +9,7 @@ RESULT_DIR = 'Save_PC_Result'
 class RGBSDF(object):
     def __init__(self, image_size, BS, POINT_NUM, ckpt_dir):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        print("SDF Device:", self.device)
+
         self.image_size = image_size
         self.BS = BS
         self.POINT_NUM = POINT_NUM
@@ -130,9 +130,9 @@ class RGBSDFFeatures(Features):
         rgb_map = self.blur(rgb_map)
         new_rgb_map = self.blur(new_rgb_map)
         pixel_map = self.blur(pixel_map)
-
+        
         ##### Record Image Level Score #####
-        self.image_labels.append(label)
+        self.image_labels.append(label.numpy())
         self.sdf_image_preds.append(sdf_s.numpy())
         self.rgb_image_preds.append(rgb_s.numpy())
         self.image_preds.append((image_score).numpy())
@@ -144,7 +144,7 @@ class RGBSDFFeatures(Features):
         self.new_rgb_pixel_preds.extend(new_rgb_map.flatten().numpy())
         self.pixel_preds.extend(pixel_map.flatten().numpy())
 
-    def predict_align_data(self, sdf, sample, label, test_data_id):
+    def predict_align_data(self, sdf, sample, test_data_id):
         ############### SDF PATCH ###############
         feature, rgb_features_indices = sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
         NN_feature, Dict_features, lib_idices, sdf_s = self.Find_KNN_feature(feature, mode='alignment')
@@ -164,9 +164,8 @@ class RGBSDFFeatures(Features):
 
         rgb_map = self.blur(rgb_map)
         sdf_map = self.blur(sdf_map)
-        
+
         # image_level
-        self.image_labels.append(label)
         self.sdf_image_preds.append(sdf_s.numpy())
         self.rgb_image_preds.append(rgb_s.numpy())
         # pixel_level

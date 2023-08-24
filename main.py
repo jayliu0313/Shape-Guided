@@ -16,8 +16,8 @@ parser.add_argument('--point_num', type=int, default=500, help="The Number of pc
 
 FILENAME = "group500"
 # path setup
-parser.add_argument('--datasets_path', type=str, default="dataset_dir", help="The dir path of mvtec3D-AD dataset")
-parser.add_argument('--grid_path', type=str, default="npz_dir", help="The dir path of grid you cut, it would include training npz, testing npz")
+parser.add_argument('--datasets_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_preprocessing/", help="The dir path of mvtec3D-AD dataset")
+parser.add_argument('--grid_path', type=str, default="/mnt/home_6T/public/samchu0218/Datasets/mvtec3d_cut_grid/imgsize224_knn500/gm10_sampled20/", help="The dir path of grid you cut, it would include training npz, testing npz")
 parser.add_argument('--ckpt_dir', type=str, default="checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
 parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
 

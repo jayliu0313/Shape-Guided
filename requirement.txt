@@ -10,3 +10,4 @@ tqdm
 wget
 tifffile
 kornia
+ptflops

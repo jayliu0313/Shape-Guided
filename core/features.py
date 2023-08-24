@@ -9,6 +9,7 @@ from utils.au_pro_util import calculate_au_pro
 from sklearn.decomposition import sparse_encode
 from utils.visualize_util import visualize_smap_distribute, visualize_image_s_distribute
 from ptflops import get_model_complexity_info
+from sklearn.utils.multiclass import type_of_target
 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
@@ -64,12 +65,6 @@ class Features(torch.nn.Module):
     def get_result(self):
         predictions = np.asarray(self.pixel_preds).reshape(-1, self.image_size, self.image_size)
         return self.image_preds, predictions
-
-    def add_sample_to_mem_bank(self, sample):
-        raise NotImplementedError
-
-    def predict(self, sample, mask, label):
-        raise NotImplementedError
 
     def count_your_model(model, input):
         flops, params = get_model_complexity_info(model, input, as_strings=True, print_per_layer_stat=True)
@@ -192,10 +187,9 @@ class Features(torch.nn.Module):
         
         self.weight = (sdf_upper - sdf_lower) / (rgb_upper - rgb_lower)
         self.bias = sdf_lower - self.weight * rgb_lower
-        new_rgb_map = rgb_map * self.weight  + self.bias
-        total_score = np.maximum(new_rgb_map, sdf_map)
-
-        visualize_smap_distribute(total_score, sdf_map, rgb_map, new_rgb_map, self.image_size, output_dir)
+        # new_rgb_map = rgb_map * self.weight  + self.bias
+        # total_score = np.maximum(new_rgb_map, sdf_map)
+        # visualize_smap_distribute(total_score, sdf_map, rgb_map, new_rgb_map, self.image_size, output_dir)
         return self.weight, self.bias
 
     def cal_total_score(self, output_dir, method='RGB_SDF'):
@@ -214,16 +208,15 @@ class Features(torch.nn.Module):
         predictions = pixel_preds.reshape(-1, self.image_size, self.image_size)
 
         # visualize the distribution of image score and pixel score
-        if len(self.rgb_pixel_preds) != 0 and method == 'RGB_SDF':
-            sdf_map = np.array(self.sdf_pixel_preds)
-            rgb_map = np.array(self.rgb_pixel_preds)
-            new_rgb_map = np.array(self.new_rgb_pixel_preds)
-            sdf_s = np.array(self.sdf_image_preds)
-            rgb_s = np.array(self.rgb_image_preds)
-            label = np.array(self.image_labels)
-            visualize_image_s_distribute(sdf_s, rgb_s, label, output_dir)
-            visualize_smap_distribute(pixel_preds, sdf_map, rgb_map, new_rgb_map, self.image_size, output_dir)
-       
+        # if len(self.rgb_pixel_preds) != 0 and method == 'RGB_SDF':
+        #     sdf_map = np.array(self.sdf_pixel_preds)
+        #     rgb_map = np.array(self.rgb_pixel_preds)
+        #     new_rgb_map = np.array(self.new_rgb_pixel_preds)
+        #     sdf_s = np.array(self.sdf_image_preds)
+        #     rgb_s = np.array(self.rgb_image_preds)
+        #     label = np.array(self.image_labels)
+            # visualize_image_s_distribute(sdf_s, rgb_s, label, output_dir)
+            # visualize_smap_distribute(pixel_preds, sdf_map, rgb_map, new_rgb_map, self.image_size, output_dir)
         self.image_rocauc = roc_auc_score(self.image_labels, image_preds)
         self.pixel_rocauc = roc_auc_score(self.pixel_labels, pixel_preds)
         for pro_integration_limit in self.pro_limit:
