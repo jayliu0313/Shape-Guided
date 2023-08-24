@@ -38,7 +38,7 @@ python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 ### Train Our 3D Expert Model
 There is the best checkpoint of the 3D expert model in ./checkpoint.<br/>
-Or you can train the 3D model by yourself, you need to cut the pretrain 3D patches in cut_patches.py and change the variable "is_pretrained" to true in ```cut_patch.py.```<br/>
+Or you can train the 3D model by yourself, you need to cut the pretrain 3D patches in cut_patches.py and change the variable "is_pretrained" to true in ```cut_patch.py```.<br/>
 ```
 python train_3Dmodel.py --grid_path GRID_PATH
 ```

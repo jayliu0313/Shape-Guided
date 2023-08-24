@@ -1,12 +1,12 @@
                             BS: 32
                             LR: 0.0001
                      POINT_NUM: 500
-                      ckpt_dir: ./checkpoint/2022-11-21-05-26-35olden_NPdc_BN
+                      ckpt_dir: ""
                        classes: ['*']
                   coreset_rate: None
                  datasets_path: None
               dict_n_component: 3
-                     grid_path: /mnt/home_6T/public/samchu0218/Datasets/mvtec3d_cut_grid/imgsize224_knn500/gm5_sampled20_new_cut/
+                     grid_path: ""
                      group_mul: 5
                     image_size: 224
                       k_number: 1
