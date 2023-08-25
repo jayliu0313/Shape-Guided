@@ -7,9 +7,8 @@ from utils.utils import set_seeds, KNNGaussianBlur
 from sklearn.metrics import roc_auc_score
 from utils.au_pro_util import calculate_au_pro
 from sklearn.decomposition import sparse_encode
-from utils.visualize_util import visualize_smap_distribute, visualize_image_s_distribute
+# from utils.visualize_util import visualize_smap_distribute, visualize_image_s_distribute
 from ptflops import get_model_complexity_info
-from sklearn.utils.multiclass import type_of_target
 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 

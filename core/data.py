@@ -385,8 +385,6 @@ def get_rgb_data(split, img_size, datasets_path):
     data_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True, num_workers=1, drop_last=False, pin_memory=True)
     return dataset, data_loader
 
-
-
 def pretrain_normal_points(ps_gt, ps, translation=False):
     tt =  0
     if((np.max(ps_gt[:,0])-np.min(ps_gt[:,0]))>(np.max(ps_gt[:,1])-np.min(ps_gt[:,1]))):

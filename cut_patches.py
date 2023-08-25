@@ -17,15 +17,15 @@ from utils.pointnet_util import sample_and_group
 IS_PRTRAIN = False
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
-parser.add_argument('--point_num', type=int, default=500)  # number of the points in the knn group.
-parser.add_argument('--sample_num', type=int, default=20)   # random sample nosie points for pretraining
-parser.add_argument('--save_grid_path', type=str, default="save_grid_path") # save here, pretrain ,train, test grid need to save in the same dir.
+parser.add_argument('--point_num', type=int, default=500, help="number of the points of each patch")
+parser.add_argument('--save_grid_path', type=str, default="save_grid_path", help="path of patches. You can set the same path for pretrain, train, test data") 
 if IS_PRTRAIN:
-    parser.add_argument('--group_mul', type=int, default=5)     # The sample points is n times more than the original points
+    parser.add_argument('--group_mul', type=int, default=5, help="Number of patches = (group_mul * points) / point_num")
+    parser.add_argument('--sample_num', type=int, default=20, help="random sample nosie points for pretraining") 
     parser.add_argument('--datasets_path', type=str, default="dataset_path")
     classes = ["*"]
 else:
-    parser.add_argument('--group_mul', type=int, default=10)     # The sample points is n times more than the original points
+    parser.add_argument('--group_mul', type=int, default=10, help="Number of patches = (group_mul * points) / point_num")     
     parser.add_argument('--datasets_path', type=str, default="dataset_path")
     classes = [
             "bagel",
@@ -42,7 +42,6 @@ else:
 a = parser.parse_args() 
 DATASETS_PATH  = a.datasets_path
 SAVE_GRID_PATH = a.save_grid_path
-SAMPLE_NUMBER = a.sample_num
 GROUP_SIZE = a.point_num    
 GROUP_MUL = a.group_mul
 
@@ -289,7 +288,7 @@ def split_patch(split, input_file, save_path):
         
         for patch in range(grouped_xyz.shape[0]):
 
-            samples = new_sample_query_points(grouped_xyz[patch], SAMPLE_NUMBER)    # sample query point
+            samples = new_sample_query_points(grouped_xyz[patch], a.sample_num)    # sample query point
             points, samples, trans  = pretrain_normal_points(grouped_xyz[patch], samples)
             sample_near = find_NN(points, samples)
 
