@@ -6,7 +6,7 @@ from utils.utils import *
 
 RESULT_DIR = 'Save_PC_Result'
 
-class RGBSDF(object):
+class SDFFeature(object):
     def __init__(self, image_size, BS, POINT_NUM, ckpt_dir):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -83,11 +83,11 @@ class RGBSDF(object):
         return s_map
 
 class RGBSDFFeatures(Features):
-    def __init__(self, image_size=224, pro_limit=[0.3]):
-        self.method = ['RGB_SDF', 'RGB', 'SDF']
-        super().__init__(image_size, pro_limit)
+    def __init__(self, conf, pro_limit, output_dir):
+        super().__init__(conf.image_size, pro_limit, output_dir)
+        self.sdf = SDFFeature(conf.image_size, conf.BS, conf.POINT_NUM, conf.ckpt_dir)
         
-    def add_sample_to_mem_bank(self, sdf, sample, train_data_id):
+    def add_sample_to_mem_bank(self, sample, train_data_id):
         ############### RGB PATCH ###############
         rgb_feature_maps = self(sample[0])
         
@@ -98,18 +98,18 @@ class RGBSDFFeatures(Features):
         ############### END RGB PATCH ###############
 
         ############### SDF Patch ###############
-        sdf_feature, rgb_feature_indices_patch = sdf.get_feature(sample[1], sample[2], train_data_id, 'train')
+        sdf_feature, rgb_feature_indices_patch = self.sdf.get_feature(sample[1], sample[2], train_data_id, 'train')
         ############### END SDF PATCH ###############
         self.sdf_patch_lib.append(sdf_feature.to('cpu'))
         self.rgb_patch_lib.append(rgb_patch_size28.to('cpu'))
         self.rgb_f_idx_patch_lib.extend(rgb_feature_indices_patch)
 
-    def predict(self, sdf, sample, mask, label, test_data_id):
+    def predict(self, sample, mask, label, test_data_id):
         
         ############### SDF PATCH ###############
-        feature, rgb_features_indices = sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
+        feature, rgb_features_indices = self.sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
         NN_feature, Dict_features, lib_idices, sdf_s = self.Find_KNN_feature(feature)
-        sdf_map = sdf.get_score_map(Dict_features, sample[1], sample[2])
+        sdf_map = self.sdf.get_score_map(Dict_features, sample[1], sample[2])
         ############### END SDF PATCH ###########
 
         ############### RGB PATCH ###############
@@ -130,7 +130,8 @@ class RGBSDFFeatures(Features):
         rgb_map = self.blur(rgb_map)
         new_rgb_map = self.blur(new_rgb_map)
         pixel_map = self.blur(pixel_map)
-        
+
+        self.image_list.append(sample[0].squeeze().numpy())
         ##### Record Image Level Score #####
         self.image_labels.append(label.numpy())
         self.sdf_image_preds.append(sdf_s.numpy())
@@ -144,11 +145,11 @@ class RGBSDFFeatures(Features):
         self.new_rgb_pixel_preds.extend(new_rgb_map.flatten().numpy())
         self.pixel_preds.extend(pixel_map.flatten().numpy())
 
-    def predict_align_data(self, sdf, sample, test_data_id):
+    def predict_align_data(self, sample, test_data_id):
         ############### SDF PATCH ###############
-        feature, rgb_features_indices = sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
+        feature, rgb_features_indices = self.sdf.get_feature(sample[1], sample[2], test_data_id, 'test')
         NN_feature, Dict_features, lib_idices, sdf_s = self.Find_KNN_feature(feature, mode='alignment')
-        sdf_map = sdf.get_score_map(Dict_features, sample[1], sample[2])
+        sdf_map = self.sdf.get_score_map(Dict_features, sample[1], sample[2])
         ############### END SDF PATCH ###########
 
         ############### RGB PATCH ###############

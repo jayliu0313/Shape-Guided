@@ -4,7 +4,6 @@ import os.path as osp
 import datetime
 import pandas as pd
 
-from core.rgb_sdf_feature import RGBSDF
 from core.shape_guide_core import ShapeGuide, Configuration
 from utils.utils import list_join
 
@@ -16,8 +15,8 @@ parser.add_argument('--point_num', type=int, default=500, help="The Number of pc
 
 FILENAME = "group500"
 # path setup
-parser.add_argument('--datasets_path', type=str, default="dataset_path", help="The dir path of mvtec3D-AD dataset")
-parser.add_argument('--grid_path', type=str, default="grid_path", help="The dir path of grid you cut, it would include training npz, testing npz")
+parser.add_argument('--datasets_path', type=str, default="dataset_dir", help="The dir path of mvtec3D-AD dataset")
+parser.add_argument('--grid_path', type=str, default="grid_dir", help="The dir path of grid you cut, it would include training npz, testing npz")
 parser.add_argument('--ckpt_dir', type=str, default="checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
 parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
 
@@ -59,7 +58,7 @@ conf.datasets_path = a.datasets_path
 conf.grid_path = a.grid_path
 conf.ckpt_dir = a.ckpt_dir
 conf.classes = class_name
-conf.method = ['RGBSDF', 'RGB', 'SDF']         # RGB or SDF or RGBSDF
+conf.method_name = ['RGB', 'SDF', 'RGB_SDF']         # RGB or SDF or RGBSDF
 conf.rgb_method = 'Dict'
 conf.k_number = 10
 conf.dict_n_component = 3
@@ -74,14 +73,9 @@ if not osp.exists(conf.output_dir):
     os.makedirs(conf.output_dir)
 conf.save(os.path.join(conf.output_dir, "Congiguration"))
 
-# create model
-conf.sdf = RGBSDF(conf.image_size, conf.BS, conf.POINT_NUM, conf.ckpt_dir)
+# Setup Integration Limit
 PRO_LIMIT = [0.3, 0.2, 0.1, 0.07, 0.05, 0.03, 0.01]
-METHOD_NAMES = [
-    'RGB',
-    'SDF',
-    'RGB_SDF'
-]
+METHOD_NAMES = conf.method_name
 METHOD_NAMES_PRO = list_join(METHOD_NAMES, [str(x) for x in PRO_LIMIT])
 
 

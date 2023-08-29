@@ -9,13 +9,15 @@ from utils.au_pro_util import calculate_au_pro
 from sklearn.decomposition import sparse_encode
 # from utils.visualize_util import visualize_smap_distribute, visualize_image_s_distribute
 from ptflops import get_model_complexity_info
+from utils.visualize_util import visualization
 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
 
 class Features(torch.nn.Module):
-    def __init__(self, image_size=224, pro_limit=[0.3]):
+    def __init__(self, image_size, pro_limit, output_dir):
         super().__init__()
+        self.output_dir = output_dir
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.rgb_feature_extractor = RGB_Model(device=self.device)
         self.rgb_feature_extractor.to(self.device)
@@ -47,6 +49,7 @@ class Features(torch.nn.Module):
         return feature_maps
 
     def initialize_score(self):
+        self.image_list = list()
         # Image-Level
         self.image_preds = list()
         self.sdf_image_preds = list()
@@ -60,10 +63,6 @@ class Features(torch.nn.Module):
         self.new_rgb_pixel_preds = list()
         self.pixel_labels = list()
         self.au_pro = dict()
-
-    def get_result(self):
-        predictions = np.asarray(self.pixel_preds).reshape(-1, self.image_size, self.image_size)
-        return self.image_preds, predictions
 
     def count_your_model(model, input):
         flops, params = get_model_complexity_info(model, input, as_strings=True, print_per_layer_stat=True)
@@ -81,8 +80,8 @@ class Features(torch.nn.Module):
         self.origin_f_map[use_f_idices] = np.array(range(use_f_idices.shape[0]),dtype=int)
         self.origin_f_map = torch.Tensor(self.origin_f_map).long()
         
-    def Dict_compute_rgb_map(self, rgb_patch_28, rgb_features_indices, lib_idices, mode='testing'):
-        rgb_lib = self.rgb_patch_lib.to(self.device)
+    def Dict_compute_rgb_map(self, rgb_patch_28, rgb_features_indices, lib_idices, mode='testing', is_dict=True):
+        rgb_lib = self.rgb_patch_lib
         lib_idices = torch.unique(lib_idices.flatten()).tolist()
         s_map_size28 = torch.zeros(28*28)
         pdist = torch.nn.PairwiseDistance(p=2, eps= 1e-12)
@@ -112,7 +111,7 @@ class Features(torch.nn.Module):
             knn_idx = knn_idx[:,:-1]
             min_val_28 = knn_val[:, 0]
             
-        if True: # Using Dictionart if TRUE, otherwise using NN
+        if is_dict: # Using Dictionart if TRUE, otherwise using NN
             rgb_patch_28 = rgb_patch_28.cpu()
             shape_guide_rgb_features_28 = shape_guide_rgb_features_28.cpu()
             for patch in range(knn_idx.shape[0]):
@@ -166,7 +165,7 @@ class Features(torch.nn.Module):
         s = torch.max(min_val) # Compute image level anomaly score #
         return NN_feature, Dict_features, knn_idx, s
 
-    def cal_alignment(self, output_dir):
+    def cal_alignment(self):
         # SDF distribution
         sdf_map = np.array(self.sdf_pixel_preds)
         non_zero_indice = np.nonzero(sdf_map)
@@ -191,7 +190,7 @@ class Features(torch.nn.Module):
         # visualize_smap_distribute(total_score, sdf_map, rgb_map, new_rgb_map, self.image_size, output_dir)
         return self.weight, self.bias
 
-    def cal_total_score(self, output_dir, method='RGB_SDF'):
+    def cal_total_score(self, method='RGB_SDF'):
 
         if method == 'RGB':
             image_preds = np.stack(self.rgb_image_preds)
@@ -221,6 +220,13 @@ class Features(torch.nn.Module):
         for pro_integration_limit in self.pro_limit:
             au_pro, _ = calculate_au_pro(gts, predictions, integration_limit=pro_integration_limit)
             self.au_pro[str(pro_integration_limit)] = au_pro
+
+    def visualize_result(self):
+        score_map = np.asarray(self.pixel_preds).reshape(-1, self.image_size, self.image_size)
+        gt_mask = np.asarray(self.pixel_labels).reshape(-1, self.image_size, self.image_size)
+        gt_label_list = np.asarray(self.image_labels, dtype=np.bool)
+        det_threshold, seg_threshold = visualization(self.image_list, gt_label_list, self.image_preds, gt_mask, score_map, self.output_dir)
+        return  det_threshold, seg_threshold
 
 class RGB_Model(torch.nn.Module):
     def __init__(self, device, backbone_name='wide_resnet50_2', out_indices=(1, 2), checkpoint_path='',

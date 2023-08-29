@@ -70,7 +70,7 @@ def export_test_images(test_img, gts, scores, threshold, output_dir):
             fig_img.savefig(image_file, dpi=dpi, format='png', bbox_inches = 'tight', pad_inches = 0.0)
             plt.close()
 
-def visualization(test_image_list, gt_label, score_label, gt_mask_list, super_mask_list, output_dir, log_file):
+def visualization(test_image_list, gt_label, score_label, gt_mask_list, super_mask_list, output_dir):
     
     gt_mask = np.asarray(gt_mask_list)
     super_mask = np.asarray(super_mask_list)
@@ -80,16 +80,15 @@ def visualization(test_image_list, gt_label, score_label, gt_mask_list, super_ma
     b = precision + recall
     f1 = np.divide(a, b, out=np.zeros_like(a), where=b != 0)
     det_threshold = thresholds[np.argmax(f1)]
-    log_file.write('Optimal DET Threshold: {:.2f}\n'.format(det_threshold))
 
     precision, recall, thresholds = precision_recall_curve(gt_mask.flatten(), super_mask.flatten())
     a = 2 * precision * recall
     b = precision + recall
     f1 = np.divide(a, b, out=np.zeros_like(a), where=b != 0)
     seg_threshold = thresholds[np.argmax(f1)]
-    log_file.write('Optimal SEG Threshold: {:.2f}\n'.format(seg_threshold))
 
     export_test_images(test_image_list, gt_mask, super_mask, seg_threshold, output_dir)
+    return det_threshold, seg_threshold
 
 def visualize_image_s_distribute(sdf_s, rgb_s, image_gt, output_dir):
     path_dirs = os.path.join(output_dir, OUT_DIR)
