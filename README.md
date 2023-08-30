@@ -36,7 +36,7 @@ python tools/preprocessing.py DATASET_PATH
 Divided the point cloud into multiple local patches for each instance.<br/>
 ```
 # This is just for building memory and inference.
-python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain False
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
 ```
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 
@@ -45,7 +45,7 @@ There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/c
 *Recommend setting the ```save_grid_path``` in the same directory as above.*
 ```
 # This is for training 3D expert model.
-python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain True
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain
 ```
 then,
 ```
@@ -55,7 +55,7 @@ python train_3Dmodel.py --grid_path GRID_PATH
 ### Buid Memory and Inference
 The result will be stored in the output directory.
 ```
-python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH --ckpt_dir "checkpoint/best_ckpt/ckpt_000601.pth" --viz True
+python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH --ckpt_path "checkpoint/best_ckpt/ckpt_000601.pth" --viz
 ```
 
 ## Citation

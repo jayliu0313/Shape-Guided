@@ -22,7 +22,7 @@ parser.add_argument('--image_size', type=int, default=224)
 parser.add_argument('--point_num', type=int, default=500, help="Number of the points of each patch")
 parser.add_argument('--datasets_path', type=str, default="<dataset_path>", help="Path of preprocessed MVTec 3D-AD dataset")
 parser.add_argument('--save_grid_path', type=str, default="<save_grid_path>", help="Path of patches. You can set the same path for pretrain, train, test data") 
-parser.add_argument('--pretrain', action="store_true", help="If true, cut the pathes of pretraining data")
+parser.add_argument('--pretrain', action="store_true", help="If true, cut the pathes for pretraining data")
 parser.add_argument('--group_mul', type=int, default=10, help="Number of patches = (group_mul * points) / point_num")
 parser.add_argument('--sample_num', type=int, default=20, help="Random sample nosie points for pretraining")   
 classes = [
