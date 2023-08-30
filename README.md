@@ -5,7 +5,7 @@
 ## Qualitative Result
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
 Signed Distance Function(SDF) means the method we estimate the point cloud to detect anomaly. <br/>
-We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other. <br/>
+We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other to get the final score map. <br/>
 ## Installation
 ### Requirement
 Linux (Ubuntu 16.04)  
@@ -32,7 +32,7 @@ It will take few minutes to remove the backgoround of the point cloud.
 ```
 python tools/preprocessing.py DATASET_PATH
 ```
-We need to divided the point cloud into multiple local patches for each instance.<br/>
+Divided the point cloud into multiple local patches for each instance.<br/>
 ```
 # This is just for building memory and inference.
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain False
@@ -40,8 +40,7 @@ python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 
 ### Train Our 3D Expert Model
-There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step.<br/>
-Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches which are contained the noise points.<br/>
+There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step. Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches which are contained the noise points.<br/>
 *Recommend setting the ```save_grid_path``` in the same directory as above.*
 ```
 # This is for training 3D expert model.
