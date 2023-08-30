@@ -32,13 +32,15 @@ It will take few minutes to remove the backgoround of the point cloud.
 python tools/preprocessing.py DATASET_PATH
 ```
 We need to divided the point cloud into multiple local patches for each instance.<br/>
+This is for build memory and inference.
 ```
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain False
 ```
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 ### Train Our 3D Expert Model
-There is the best checkpoint of the 3D expert model in "checkpoint/best_ckpt/ckpt_000601.pth".<br/>
-Alternatively, you can train the 3D expert model on your own, you can execute the following commands to get the required training patches.
+There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step.<br/>
+Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches.
+*Recommend setting the "save_grid_path" in the same directory as above.*
 ```
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain True
 ```
@@ -46,7 +48,6 @@ then,
 ```
 python train_3Dmodel.py --grid_path GRID_PATH
 ```
-*```DATASET_PATH``` is the directory of preprocessing MVTEC3D-AD, and ```save_grid_path``` can set the same directory as above.*
 ### Buid Memory and Inference
 The result will be stored in the output directory.
 ```
