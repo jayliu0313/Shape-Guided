@@ -24,14 +24,14 @@ parser.add_argument('--output_dir', type=str, default='output/', help="The dir p
 parser.add_argument('--CUDA', type=int, default=0, help="Choose the device of CUDA")
 parser.add_argument('--viz', action="store_true", help="Visualize results with heatmap")
 class_name = [
-    # "bagel",
-    # "cable_gland",
-    # "carrot",
-    # "cookie",
-    # "dowel",
-    # "foam",
-    # "peach",
-    # "potato",
+    "bagel",
+    "cable_gland",
+    "carrot",
+    "cookie",
+    "dowel",
+    "foam",
+    "peach",
+    "potato",
     "rope",
     "tire"
     ]  # load category

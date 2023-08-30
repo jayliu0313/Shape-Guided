@@ -49,7 +49,7 @@ python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --
 ```
 then,
 ```
-python train_3Dmodel.py --grid_path GRID_PATH
+python train_3Dmodel.py --grid_path GRID_PATH --ckpt_path "./checkpoint"
 ```
 
 ### Buid Memory and Inference
