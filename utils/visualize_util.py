@@ -34,7 +34,7 @@ def export_test_images(test_img, gts, scores, threshold, output_dir):
         kernel = morphology.disk(2)
         scores_norm = 1.0/scores.max()
 
-        for i in tqdm(range(0, len(test_img), 5), desc="export heat map image"):
+        for i in tqdm(range(0, len(test_img), 1), desc="export heat map image"):
             img = test_img[i]
             img = denormalization(img, IMAGENET_MEAN, IMAGENET_STD)
             
@@ -193,86 +193,3 @@ def visualize_smap_distribute(total_map, sdf_map, rgb_map, new_rgb_map, image_si
         
         plt.savefig(image_file)
         plt.close()
-
-"""
-def export_hist(gts, scores, threshold, output_dir):
-    print('Exporting histogram...')
-    plt.rcParams.update({'font.size': 4})
-    image_dirs = os.path.join(output_dir, OUT_DIR)
-    os.makedirs(image_dirs, exist_ok=True)
-    Y = scores.flatten()
-    Y_label = gts.flatten()
-    fig = plt.figure(figsize=(4*cm, 4*cm), dpi=dpi)
-    ax = plt.Axes(fig, [0., 0., 1., 1.])
-    fig.add_axes(ax)
-    plt.hist([Y[Y_label==1], Y[Y_label==0]], 500, density=True, color=['r', 'g'], label=['ANO', 'TYP'], alpha=0.75, histtype='barstacked')
-    image_file = os.path.join(image_dirs, 'hist_images.svg')
-    fig.savefig(image_file, dpi=dpi, format='svg', bbox_inches = 'tight', pad_inches = 0.0)
-    plt.close()
-
-
-def export_groundtruth(test_img, gts, output_dir):
-    image_dirs = os.path.join(output_dir, OUT_DIR, 'gt_images')
-    # images
-    if not os.path.isdir(image_dirs):
-        print('Exporting grountruth...')
-        os.makedirs(image_dirs, exist_ok=True)
-        num = len(test_img)
-        kernel = morphology.disk(4)
-        for i in range(num):
-            img = test_img[i]
-            img = denormalization(img, IMAGENET_MEAN, IMAGENET_STD)
-            # gts
-            gt_mask = gts[i].astype(np.float64)
-            #gt_mask = morphology.opening(gt_mask, kernel)
-            gt_mask = (255.0*gt_mask).astype(np.uint8)
-            gt_img = mark_boundaries(img, gt_mask, color=(1, 0, 0), mode='thick')
-            #
-            fig = plt.figure(figsize=(2*cm, 2*cm), dpi=dpi)
-            ax = plt.Axes(fig, [0., 0., 1., 1.])
-            ax.set_axis_off()
-            fig.add_axes(ax)
-            ax.imshow(gt_img)
-            image_file = os.path.join(image_dirs, '{:08d}'.format(i) + '.svg')
-            fig.savefig(image_file, dpi=dpi, format='svg', bbox_inches = 'tight', pad_inches = 0.0)
-            plt.close()
-
-def export_scores(test_img, scores, threshold, output_dir):
-    image_dirs = os.path.join(output_dir, OUT_DIR, 'sc_images')
-    # images
-    if not os.path.isdir(image_dirs):
-        print('Exporting scores...')
-        os.makedirs(image_dirs, exist_ok=True)
-        num = len(test_img)
-        kernel = morphology.disk(4)
-        scores_norm = 1.0/scores.max()
-        for i in range(num):
-            img = test_img[i]
-            img = denormalization(img, IMAGENET_MEAN, IMAGENET_STD)
-
-            # scores
-            score_mask = np.zeros_like(scores[i])
-            score_mask[scores[i] >  threshold] = 1.0
-            score_mask = morphology.opening(score_mask, kernel)
-            score_mask = (255.0*score_mask).astype(np.uint8)
-            score_img = mark_boundaries(img, score_mask, color=(1, 0, 0), mode='thick')
-            score_map = (255.0*scores[i]*scores_norm).astype(np.uint8)
-            #
-            fig_img, ax_img = plt.subplots(2, 1, figsize=(2*cm, 4*cm))
-            for ax_i in ax_img:
-                ax_i.axes.xaxis.set_visible(False)
-                ax_i.axes.yaxis.set_visible(False)
-                ax_i.spines['top'].set_visible(False)
-                ax_i.spines['right'].set_visible(False)
-                ax_i.spines['bottom'].set_visible(False)
-                ax_i.spines['left'].set_visible(False)
-            #
-            plt.subplots_adjust(hspace = 0.1, wspace = 0.1)
-            ax_img[0].imshow(img, cmap='gray', interpolation='none')
-            ax_img[0].imshow(score_map, cmap='jet', norm=norm, alpha=0.5, interpolation='none')
-            ax_img[1].imshow(score_img)
-            image_file = os.path.join(image_dirs, '{:08d}'.format(i) + '.svg')
-            fig_img.savefig(image_file, dpi=dpi, format='svg', bbox_inches = 'tight', pad_inches = 0.0)
-            plt.close()
-
-"""

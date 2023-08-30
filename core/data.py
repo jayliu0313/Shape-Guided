@@ -8,7 +8,7 @@ from torchvision import transforms
 from utils.mvtec3d_util import *
 from utils.utils import * 
 from torch.utils.data import Dataset, DataLoader
-
+from tqdm import tqdm
 
 class MVTec3D(Dataset):
     def __init__(self, split, class_name, img_size, datasets_path, grid_path):
@@ -209,21 +209,21 @@ class MVTec3DPreTrain(Dataset):
         self.sample_size = sample_size
         self.grid_path = grid_path
         self.points_all, self.samples_all= self.load_dataset()  # self.labels => good : 0, anomaly : 1
-        print('# # # # # # # Total Patch Number:', len(self.points_all), '# # # # # # #')
+        print('# # # # # # # Total Number of Patches:', len(self.points_all), '# # # # # # #')
 
     def load_dataset(self):
-        
-        npz_paths = glob.glob(os.path.join(self.grid_path, 'pretrain', self.class_name) + "/*.npz")
+        npz_paths = glob.glob(os.path.join(self.grid_path, 'PRETRAIN_DATA', self.class_name) + "/*.npz")
         npz_paths.sort()
         samples_all = []
         points_all = []
-        for npz_path in npz_paths:
+
+        for npz_path in tqdm(npz_paths, desc='Load Data for Pre-Training'):
             load_data = np.load(npz_path, allow_pickle=True)
             samples_set = np.asarray(load_data['samples_all'])    # all of the sample points
             points_set = np.asarray(load_data['points_all'])      # the gt of sample points
 
-            print('Load npz path:', npz_path)
-            print('Data patches number:', points_set.shape[0])
+            #print('Load npz path:', npz_path)
+            #print('Number of patches:', points_set.shape[0])
 
             for patch in range(points_set.shape[0]):
                 point, sample = points_set[patch] , samples_set[patch]

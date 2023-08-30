@@ -2,10 +2,13 @@ import os
 import glob
 import math
 import torch
+import random
+import shutil
 import argparse
 import numpy as np
 import tifffile as tiff
 from plyfile import PlyData
+from tqdm import tqdm
 
 # sample
 from scipy.spatial import cKDTree
@@ -14,20 +17,15 @@ from scipy.spatial import cKDTree
 from utils.pointnet_util import sample_and_group
 
 
-IS_PRTRAIN = False
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
-parser.add_argument('--point_num', type=int, default=500, help="number of the points of each patch")
-parser.add_argument('--save_grid_path', type=str, default="save_grid_path", help="path of patches. You can set the same path for pretrain, train, test data") 
-if IS_PRTRAIN:
-    parser.add_argument('--group_mul', type=int, default=5, help="Number of patches = (group_mul * points) / point_num")
-    parser.add_argument('--sample_num', type=int, default=20, help="random sample nosie points for pretraining") 
-    parser.add_argument('--datasets_path', type=str, default="dataset_path")
-    classes = ["*"]
-else:
-    parser.add_argument('--group_mul', type=int, default=10, help="Number of patches = (group_mul * points) / point_num")     
-    parser.add_argument('--datasets_path', type=str, default="dataset_path")
-    classes = [
+parser.add_argument('--point_num', type=int, default=500, help="Number of the points of each patch")
+parser.add_argument('--datasets_path', type=str, default="<dataset_path>", help="Path of preprocessed MVTec 3D-AD dataset")
+parser.add_argument('--save_grid_path', type=str, default="<save_grid_path>", help="Path of patches. You can set the same path for pretrain, train, test data") 
+parser.add_argument('--pretrain', action="store_true", help="If true, cut the pathes of pretraining data")
+parser.add_argument('--group_mul', type=int, default=10, help="Number of patches = (group_mul * points) / point_num")
+parser.add_argument('--sample_num', type=int, default=20, help="Random sample nosie points for pretraining")   
+classes = [
             "bagel",
             "cable_gland",
             "carrot",
@@ -39,24 +37,26 @@ else:
             "rope",
             "tire",
             ]
-a = parser.parse_args() 
+
+a = parser.parse_args()
+IS_PRTRAIN = a.pretrain
 DATASETS_PATH  = a.datasets_path
 SAVE_GRID_PATH = a.save_grid_path
 GROUP_SIZE = a.point_num    
-GROUP_MUL = a.group_mul
+GROUP_MUL = a.group_mul if not IS_PRTRAIN else 5
 
-
-def file_process(split, img_path):
-    for i in range(len(img_path)):
+def file_process(split, img_path, class_name):
+    for i in tqdm(range(len(img_path)), desc=f'Cutting patches of {split}-data for class {class_name}'):
 
         if split in ['pretrain']:
             category_dir = img_path[i].split(DATASETS_PATH)[-1]
-            category_dir = category_dir.replace(".ply", ".npz")
             category_dir = category_dir.replace(".tiff", ".npz")
-            category_dir = category_dir.replace("pretrain_data", "pretrain")
-            save_path = SAVE_GRID_PATH + category_dir
+            category_dir = category_dir.replace("/train/good/xyz/", "/")
+            save_path = SAVE_GRID_PATH + '/PRETRAIN_DATA/' + category_dir
             save_dir = os.path.dirname(save_path)
-            if not os.path.exists(save_dir):
+            if i == 0:
+                if os.path.exists(save_dir):
+                    shutil.rmtree(save_dir)
                 os.makedirs(save_dir)
         else:
             category_dir = img_path[i].split(DATASETS_PATH)[-1]
@@ -66,16 +66,18 @@ def file_process(split, img_path):
             save_dir = os.path.dirname(save_path)
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
-        print('\n<Sampling>')
-        print('img_path = ',img_path[i])
+        #print('\n<Sampling>')
+        #print('img_path = ', img_path[i])
+        #print('save_path = ', save_path)
         split_patch(split, img_path[i], save_path)  # img_path[i] is the input tiff file
 
 def get_data_loader(split, class_name):
 
+
     if  split in ['pretrain']:
-        dir_path = glob.glob(os.path.join(DATASETS_PATH, "pretrain_data", class_name) + "/*.tiff")
-        dir_path.extend(glob.glob(os.path.join(DATASETS_PATH, "pretrain_data") + "/*/*.ply"))
-        dir_path.sort()
+        img_path = os.path.join(DATASETS_PATH, class_name, "train")
+        dir_path = glob.glob(os.path.join(img_path, 'good', 'xyz') + "/*.tiff")
+        dir_path = random.sample(dir_path, 20) # Random select 20 sample in each category for pre-training 3D model.
 
     elif split in ['train']:
         img_path = os.path.join(DATASETS_PATH, class_name, "train")
@@ -100,7 +102,7 @@ def get_data_loader(split, class_name):
             dir_path.extend(tiff_path)
         dir_path.sort()
 
-    file_process(split, dir_path)
+    file_process(split, dir_path, class_name)
 
 def organized_pc_to_unorganized_pc(organized_pc):
     return organized_pc.reshape(organized_pc.shape[0] * organized_pc.shape[1], organized_pc.shape[2])
@@ -254,7 +256,7 @@ def split_patch(split, input_file, save_path):
         points = np.asarray(input)
 
     pointcloud_s = points.astype(np.float32)
-    print('### pointcloud sparse:', pointcloud_s.shape[0])
+    #print('### pointcloud sparse:', pointcloud_s.shape[0])
 
     pointcloud_s_t = pointcloud_s - np.array([np.min(pointcloud_s[:,0]),np.min(pointcloud_s[:,1]),np.min(pointcloud_s[:,2])])
     pointcloud_s_t = pointcloud_s_t / (np.array([np.max(pointcloud_s[:,0]) - np.min(pointcloud_s[:,0]), np.max(pointcloud_s[:,0]) - np.min(pointcloud_s[:,0]), np.max(pointcloud_s[:,0]) - np.min(pointcloud_s[:,0])]))
@@ -274,11 +276,11 @@ def split_patch(split, input_file, save_path):
     re_org_idx_all = org_idx_all.reshape(org_idx_all.shape[0] * org_idx_all.shape[1])
     no_dup_idx_all = np.unique(re_org_idx_all, axis=0)
 
-    print("Test whether the point cloud is covered")
-    print("group_size:", GROUP_SIZE, "num_group:", num_group)
-    print("points_gt_all", points_gt_all.shape)
-    print("no_dup_idx_all", no_dup_idx_all.shape)
-    print('#')
+    #print("Test whether the point cloud is covered")
+    #print("group_size:", GROUP_SIZE, "num_group:", num_group)
+    #print("points_gt_all", points_gt_all.shape)
+    #print("no_dup_idx_all", no_dup_idx_all.shape)
+    #print('#')
 
     if split in ['pretrain']:
         origin_all = []
@@ -297,9 +299,9 @@ def split_patch(split, input_file, save_path):
             sample_near_all.append(sample_near)
             trans_all.append(trans)
 
-        print("group_size:", GROUP_SIZE, "num_group:", num_group)
-        print("grouped_xyz", grouped_xyz.shape)
-        print("----------------------------------------")
+        #print("group_size:", GROUP_SIZE, "num_group:", num_group)
+        #print("grouped_xyz", grouped_xyz.shape)
+        #print("----------------------------------------")
         np.savez(save_path, origins_all=origin_all, samples_all=sample_all, points_all=sample_near_all)
     else:
         np.savez(save_path, points_gt=grouped_xyz, points_idx=org_idx_all)
@@ -308,13 +310,14 @@ def split_patch(split, input_file, save_path):
 
 if __name__ == '__main__':
     print(torch.__version__)
-    print("Start to get patch")
+    print("Start to cut patches")
     for cls in classes:
-        print('Class:',cls)
         if IS_PRTRAIN:
             get_data_loader('pretrain', cls)
         else:
             get_data_loader('train', cls)
             get_data_loader('test', cls)
             get_data_loader('validation', cls)
+    
+    print('\nAll patches are saved to the grid_path:', a.save_grid_path)
     print('Finish!')

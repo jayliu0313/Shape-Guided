@@ -13,16 +13,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224, help="Reduced 800*800 image size to n*n by interpolate")
 parser.add_argument('--point_num', type=int, default=500, help="The Number of pc for each 3D patch")
 
-FILENAME = "group500"
+FILENAME = "-result"
 # path setup
-parser.add_argument('--datasets_path', type=str, default="dataset_dir", help="The dir path of mvtec3D-AD dataset")
-parser.add_argument('--grid_path', type=str, default="grid_dir", help="The dir path of grid you cut, it would include training npz, testing npz")
-parser.add_argument('--ckpt_dir', type=str, default="checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
+parser.add_argument('--datasets_path', type=str, default="<dataset_dir>", help="The dir path of mvtec3D-AD dataset")
+parser.add_argument('--grid_path', type=str, default="<grid_dir>", help="The dir path of grid you cut, it would include training npz, testing npz")
+parser.add_argument('--ckpt_path', type=str, default="checkpoint/best_ckpt/ckpt_000601.pth")      #It would load prtraining of ckpt
 parser.add_argument('--output_dir', type=str, default='output/', help="The dir path of output")
 
 # others
-parser.add_argument('--CUDA', type=int, default=0, help="choose the device of CUDA")
-
+parser.add_argument('--CUDA', type=int, default=0, help="Choose the device of CUDA")
+parser.add_argument('--viz', action="store_true", help="Visualize results with heatmap")
 class_name = [
     "bagel",
     "cable_gland",
@@ -56,12 +56,13 @@ conf.POINT_NUM = a.point_num
 conf.group_mul = a.group_mul
 conf.datasets_path = a.datasets_path
 conf.grid_path = a.grid_path
-conf.ckpt_dir = a.ckpt_dir
+conf.ckpt_path = a.ckpt_path
 conf.classes = class_name
 conf.method_name = ['RGB', 'SDF', 'RGB_SDF']         # RGB or SDF or RGBSDF
 conf.rgb_method = 'Dict'
 conf.k_number = 10
 conf.dict_n_component = 3
+conf.viz = a.viz
 
 # create output dir and log file
 time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -97,7 +98,7 @@ if __name__ == "__main__":
         au_pros_df[cls.title()] = au_pros_df['Method'].map(au_pros)
 
         print(f"\nFinished running on class {cls}")
-        print("################################################################################\n\n")
+        print("################################################################################\n")
 
     image_rocaucs_df['Mean'] = round(image_rocaucs_df.iloc[:, 1:].mean(axis=1),3)
     pixel_rocaucs_df['Mean'] = round(pixel_rocaucs_df.iloc[:, 1:].mean(axis=1),3)

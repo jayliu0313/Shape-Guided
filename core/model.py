@@ -92,7 +92,6 @@ class SDF_Model(nn.Module):
     def __init__(self, point_num):
         super(SDF_Model, self).__init__()
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        print("sdf device", self.device)
         self.encoder = encoder_BN()
         self.NIF = local_NIF()
         self.point_num = point_num

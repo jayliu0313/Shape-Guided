@@ -7,7 +7,7 @@ from utils.utils import *
 RESULT_DIR = 'Save_PC_Result'
 
 class SDFFeature(object):
-    def __init__(self, image_size, BS, POINT_NUM, ckpt_dir):
+    def __init__(self, image_size, BS, POINT_NUM, ckpt_path):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.image_size = image_size
@@ -19,7 +19,7 @@ class SDFFeature(object):
         self.sdf_model.eval()
         
         # load check point
-        checkpoint = torch.load(ckpt_dir, map_location=self.device)
+        checkpoint = torch.load(ckpt_path, map_location=self.device)
         self.sdf_model.load_state_dict(checkpoint['sdf_model'])
 
     def get_feature(self, points_all, points_idx, data_id, split='test'):
@@ -85,7 +85,7 @@ class SDFFeature(object):
 class RGBSDFFeatures(Features):
     def __init__(self, conf, pro_limit, output_dir):
         super().__init__(conf.image_size, pro_limit, output_dir)
-        self.sdf = SDFFeature(conf.image_size, conf.BS, conf.POINT_NUM, conf.ckpt_dir)
+        self.sdf = SDFFeature(conf.image_size, conf.BS, conf.POINT_NUM, conf.ckpt_path)
         
     def add_sample_to_mem_bank(self, sample, train_data_id):
         ############### RGB PATCH ###############

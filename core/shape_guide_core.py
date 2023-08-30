@@ -15,14 +15,16 @@ class Configuration(object):
         BS=1,
         datasets_path=None,
         grid_path=None,
-        ckpt_dir=None,
+        ckpt_path=None,
         output_dir=None,
+        epoch=1000,
         LR=0.0001,
         classes=None,
         rgb_method='Dict',
         k_number=1,
         dict_n_component=3,
-        method_name=None
+        method_name=None,
+        viz=False,
     ):
         self.image_size = image_size
         self.sampled_size = sampled_size
@@ -31,14 +33,16 @@ class Configuration(object):
         self.BS = BS
         self.datasets_path = datasets_path
         self.grid_path = grid_path
-        self.ckpt_dir = ckpt_dir
+        self.ckpt_path = ckpt_path
         self.output_dir = output_dir
+        self.epoch = epoch
         self.LR = LR
         self.classes = classes
         self.method_name = method_name
         self.rgb_method = rgb_method
         self.k_number = k_number
         self.dict_n_component = dict_n_component
+        self.viz = viz
     
     def exists_and_is_not_none(self, attribute):
         return hasattr(self, attribute) and getattr(self, attribute) is not None
@@ -76,6 +80,7 @@ class ShapeGuide():
         self.parent_dir = conf.output_dir
         output_dir = os.path.join(conf.output_dir, class_name)
         self.pro_limit = pro_limit
+        self.viz = conf.viz
 
         self.method_name = conf.method_name
         self.methods = RGBSDFFeatures(conf, pro_limit, output_dir)
@@ -91,16 +96,17 @@ class ShapeGuide():
         data_loader = get_data_loader("train", class_name=self.class_name, img_size=self.image_size, 
         datasets_path=self.datasets_path, grid_path=self.grid_path, shuffle=True)
         with torch.no_grad():
-            for train_data_id, (sample, _) in enumerate(tqdm(data_loader, desc=f'Extracting train features for class {self.class_name}')):
+            for train_data_id, (sample, _) in enumerate(tqdm(data_loader, desc=f'Extracting training-features for class {self.class_name}')):
                 self.methods.add_sample_to_mem_bank(sample, train_data_id)
 
-        print(f'\n\nRunning ForeGround Subsampling on class {self.class_name}...')
+        print(f'\nRunning ForeGround Subsampling on class {self.class_name}...')
         self.methods.foreground_subsampling()
 
     def align(self):
         data_loader = get_data_loader("train", class_name=self.class_name, img_size=self.image_size, datasets_path=self.datasets_path, grid_path=self.grid_path, shuffle=True)
+        print(f'Computing weight and bias for alignment on class {self.class_name}\n')
         with torch.no_grad():
-            for align_data_id, (sample, _) in enumerate(tqdm(data_loader, desc=f'Extracting aligned features for class {self.class_name}')):
+            for align_data_id, (sample, _) in enumerate(data_loader):
                 if align_data_id < 25:
                     self.methods.predict_align_data(sample, align_data_id)
                 else: 
@@ -119,13 +125,14 @@ class ShapeGuide():
         datasets_path=self.datasets_path, grid_path=self.grid_path)
 
         with torch.no_grad():
-            for test_data_id, (sample, mask, label) in enumerate(tqdm(test_loader, desc=f'Extracting test features for class {self.class_name}')):
+            for test_data_id, (sample, mask, label) in enumerate(tqdm(test_loader, desc=f'Extracting testing-features for class {self.class_name}')):
                 self.methods.predict(sample, mask, label, test_data_id)
 
         # Just visualize RGB+SDF method and compute its threshold
-        det_threshold, seg_threshold = self.methods.visualize_result()
-        self.log_file.write('Optimal DET Threshold: {:.2f}\n'.format(det_threshold))
-        self.log_file.write('Optimal SEG Threshold: {:.2f}\n'.format(seg_threshold))
+        if self.viz:
+            det_threshold, seg_threshold = self.methods.visualize_result()
+            self.log_file.write('Optimal DET Threshold: {:.2f}\n'.format(det_threshold))
+            self.log_file.write('Optimal SEG Threshold: {:.2f}\n'.format(seg_threshold))
 
         image_rocaucs = dict()
         pixel_rocaucs = dict()

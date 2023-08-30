@@ -19,13 +19,15 @@ parser.add_argument('--image_size', type=int, default=224)
 parser.add_argument('--point_num', type=int, default=500)  # For one local region include how many points, and it would input to the model
 parser.add_argument('--group_mul', type=int, default=5)
 parser.add_argument('--sampled_size', type=int, default=20)
-parser.add_argument('--grid_path', type=str, default = "grid_dir")
-parser.add_argument('--ckpt_dir', type=str, default = "./checkpoint") # auto recreate if exist
-CKPT_FILENAME = "knn500"
+parser.add_argument('--grid_path', type=str, default = "<grid_dir>", help="The dir path of grid you cut")
+parser.add_argument('--ckpt_path', type=str, default = "./checkpoint") # auto recreate if exist
+CKPT_FILENAME = "-knn500"
 parser.add_argument('--CUDA', type=int, default=0)
 parser.add_argument('--batch_size', type=int, default=32)
-parser.add_argument("--save_idx", type=int, default=-1)
+parser.add_argument("--epoch", type=int, default=1000)
 parser.add_argument("--learning_rate", type=int, default=0.0001)
+
+
 classes = [
 "*"
 ]  # load category
@@ -44,17 +46,16 @@ conf = Configuration(
     BS = a.batch_size,
     grid_path = a.grid_path,
     classes = classes,
+    epoch = a.epoch,
     LR = a.learning_rate
 )
 
 # create the ckpt dir and conf file
 time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-conf.ckpt_dir = os.path.join(a.ckpt_dir, time) + CKPT_FILENAME
-if not osp.exists(conf.ckpt_dir):
-    os.makedirs(conf.ckpt_dir)
-conf.save(os.path.join(conf.ckpt_dir, "Congiguration"))
-RESULT_DIR = os.path.join(conf.ckpt_dir, "result")
-os.makedirs(RESULT_DIR)
+conf.ckpt_path = os.path.join(a.ckpt_path, time) + CKPT_FILENAME
+if not osp.exists(conf.ckpt_path):
+    os.makedirs(conf.ckpt_path)
+conf.save(os.path.join(conf.ckpt_path, "Congiguration"))
 
 class Pretraining():
     def __init__(self, conf):
@@ -63,8 +64,9 @@ class Pretraining():
         # configuration
         self.BS = conf.BS
         self.POINT_NUM = conf.POINT_NUM
-        self.ckpt_dir = conf.ckpt_dir
+        self.ckpt_path = conf.ckpt_path
         learning_rate = conf.LR
+        self.epoch = conf.epoch
         self.current_iter = 0
 
         # Initialize Model
@@ -73,10 +75,10 @@ class Pretraining():
 
     def train(self, pretrain_loader):
         buf_size = 1  # Make 'training_stats' file to flush each output line regarding training.
-        log_file = open(osp.join(self.ckpt_dir, "train_states.txt"), "a", buf_size)
-        for epoch in range(1001):
+        log_file = open(osp.join(self.ckpt_path, "train_states.txt"), "a", buf_size)
+        for epoch in range(self.epoch + 1):
             loss_list = []
-            for points, samples in tqdm(pretrain_loader, desc=f'Pre-Training Epoch: {epoch}'):
+            for points, samples in tqdm(pretrain_loader, desc=f'Pre-Training Epoch {epoch}'):
                 if points.shape[0] != self.BS:
                     continue
                 point = points.reshape(self.BS, self.POINT_NUM, 3)
@@ -89,18 +91,11 @@ class Pretraining():
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
-                loss_list.append(loss)
-               
-            if(epoch % 200 == 0):
-                for patch in range(self.BS):
-                    gt_pc = point[patch].detach().cpu().numpy()
-                    predict_pc = g_points[patch].detach().cpu().numpy()
-                    save_pc(gt_pc, RESULT_DIR, str(epoch) + '_gt_patch' + str(patch))
-                    save_pc(predict_pc, RESULT_DIR, str(epoch) + '_predict_patch' + str(patch))
+                loss_list.append(loss.detach().cpu().numpy())
 
-            print('\nepoch: ', epoch, 'loss: ', sum(loss_list) / len(loss_list))
+            print('Loss:', sum(loss_list) / len(loss_list))
             if(epoch % 100 == 0):
-                print('save model and epoch:', epoch ,'loss:',loss)
+                print('<Save Model> Epoch:', epoch ,' Loss:',loss.detach().cpu().numpy())
                 self.save_checkpoint()
             if log_file is not None:
                 log_file.write(
@@ -111,8 +106,8 @@ class Pretraining():
         self.save_checkpoint()
 
     def load_checkpoint(self, checkpoint_name):
-        checkpoint = torch.load(os.path.join(self.ckpt_dir, checkpoint_name), map_location=self.device)
-        print(os.path.join(self.ckpt_dir, 'checkpoints', checkpoint_name))
+        checkpoint = torch.load(os.path.join(self.ckpt_path, checkpoint_name), map_location=self.device)
+        print(os.path.join(self.ckpt_path, 'checkpoints', checkpoint_name))
         self.sdf_model.load_state_dict(checkpoint['sdf_model'])
         self.current_iter = checkpoint['current_iteration']
         
@@ -121,7 +116,7 @@ class Pretraining():
             'sdf_model': self.sdf_model.state_dict(),
             'current_iteration': self.current_iter,
         }
-        torch.save(checkpoint, os.path.join(self.ckpt_dir, 'ckpt_{:0>6d}.pth'.format(self.current_iter)))
+        torch.save(checkpoint, os.path.join(self.ckpt_path, 'ckpt_{:0>6d}.pth'.format(self.current_iter)))
 
 if __name__ == '__main__':
     pretrain = Pretraining(conf)
