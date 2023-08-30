@@ -22,7 +22,7 @@ parser.add_argument('--output_dir', type=str, default='output/', help="The dir p
 
 # others
 parser.add_argument('--CUDA', type=int, default=0, help="Choose the device of CUDA")
-parser.add_argument('--viz', action="store_true", help="Visualize results with heatmap")
+parser.add_argument('--viz', action="store_true", default=False, help="Visualize results with heatmap")
 class_name = [
     "bagel",
     "cable_gland",
@@ -44,8 +44,6 @@ a = parser.parse_args()
 cuda_idx = str(a.CUDA)
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]= cuda_idx
-
-# the output will save in the viz/PointNet, and you need to chage the extension of images.../file to ".svg"
 
 # configuration
 conf = Configuration()

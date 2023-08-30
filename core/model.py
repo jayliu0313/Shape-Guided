@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from torch.autograd import Variable
 from ptflops import get_model_complexity_info
-import torchvision
 import torch.nn.functional as F
 import torch.nn as nn
 

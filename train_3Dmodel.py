@@ -12,8 +12,6 @@ from core.data import get_pretrain_data_loader
 from tqdm import tqdm
 from utils.utils import *
 
-################################### 指令 #################################
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_size', type=int, default=224)
 parser.add_argument('--point_num', type=int, default=500)  # For one local region include how many points, and it would input to the model
@@ -36,7 +34,6 @@ a = parser.parse_args()
 cuda_idx = str(a.CUDA)
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]= cuda_idx
-#torch.cuda.set_device(a.CUDA)
 
 conf = Configuration(
     image_size = a.image_size,
