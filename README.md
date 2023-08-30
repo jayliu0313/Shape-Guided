@@ -3,8 +3,8 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/rgb-3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/rgb-3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
-We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other. <br/>
 Signed Distance Function(SDF) means the method we estimate the point cloud to detect anomaly. <br/>
+We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other. <br/>
 ## Installation
 ### Requirement
 Linux (Ubuntu 16.04)  
@@ -31,10 +31,16 @@ It will take few minutes to remove the backgoround of the point cloud.
 ```
 python tools/preprocessing.py DATASET_PATH
 ```
-We need to divided the point cloud into multiple patches for each instance.<br/>
+We need to divided the point cloud into multiple local patches for each instance.<br/>
+If you're not interested in training our 3D Expert Model, you can directly utilize the pretrained checkpoint we already have and cut patches for memory data. 
 ```
-python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain False
 ```
+Alternatively, you can train the 3D expert model on your own, and it may take few minutes to process training data.
+```
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain True
+```
+
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 ### Train Our 3D Expert Model
 There is the best checkpoint of the 3D expert model in "checkpoint/best_ckpt/ckpt_000601.pth".<br/>
