@@ -32,16 +32,17 @@ It will take few minutes to remove the backgoround of the point cloud.
 python tools/preprocessing.py DATASET_PATH
 ```
 We need to divided the point cloud into multiple local patches for each instance.<br/>
-This is for build memory and inference.
 ```
+# This is for build memory and inference.
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain False
 ```
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 ### Train Our 3D Expert Model
 There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step.<br/>
-Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches.
+Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches which are contained the noise points.<br/>
 *Recommend setting the "save_grid_path" in the same directory as above.*
 ```
+# This is for train 3D expert model.
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain True
 ```
 then,
