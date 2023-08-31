@@ -4,7 +4,7 @@ import numpy as np
 import os
 import os.path as osp
 
-model_path = "/home/jayliu0313/shape_guide_pytorch/checkpoint/Xmodel/2022-11-27-21-29-45test"
+model_path = ""
 parent_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 absolute_path = os.path.join(parent_dir, model_path)
 def main():
