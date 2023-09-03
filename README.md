@@ -2,12 +2,12 @@
 ### [Paper Link](https://openreview.net/pdf?id=IkSGn9fcPz)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/shape-guided-shape-guided-dual-memory/rgb-3d-anomaly-detection-and-segmentation-on)](https://paperswithcode.com/sota/rgb-3d-anomaly-detection-and-segmentation-on?p=shape-guided-shape-guided-dual-memory)
-## Qualitative Result
+## Qualitative Results
 Signed Distance Function(SDF) means the method we estimate the point cloud to detect anomaly. We utilize the information of the RGB and the corresponding 3D point cloud to detect anomaly and complement each other to get the final score map.
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/complementary_heatmap.png)
-Img-AUROC Results.
+### Img-AUROC Results
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/Img_AUROC.png)
-AU PRO Results.
+### AU PRO Results
 ![image](https://github.com/jayliu0313/Shape-Guided/blob/main/img/Pix_AUPRO.png)
 ## Installation
 ### Requirement
