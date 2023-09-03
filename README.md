@@ -37,7 +37,7 @@ python tools/preprocessing.py DATASET_PATH
 ```
 Divided the point cloud into multiple local patches for each instance.<br/>
 ```
-python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path data/
 ```
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
 
@@ -45,17 +45,17 @@ python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
 There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step. Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches which are contained the noise points.<br/>
 *Recommend setting the ```save_grid_path``` in the same directory as above.*
 ```
-python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain
+python cut_patches.py --datasets_path DATASET_PATH --save_grid_path data/ --pretrain
 ```
 then,
 ```
-python train_3Dmodel.py --grid_path GRID_PATH --ckpt_path "./checkpoint"
+python train_3Dmodel.py --grid_path data/ --ckpt_path "./checkpoint"
 ```
 
 ### Buid Memory and Inference
 The result will be stored in the output directory.
 ```
-python main.py --datasets_path DATASET_PATH --grid_path GRID_PATH --ckpt_path "checkpoint/best_ckpt/ckpt_000601.pth"
+python main.py --datasets_path DATASET_PATH --grid_path data/ --ckpt_path "checkpoint/best_ckpt/ckpt_000601.pth"
 ```
 
 ## Citation
