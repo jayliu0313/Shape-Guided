@@ -18,7 +18,7 @@ git clone https://github.com/jayliu0313/Shape-Guided.git
 cd Shape-Guided
 conda create --name myenv python=3.6
 conda activate myenv
-pip install requirement.txt
+pip install -r requirement.txt
 ```
 
 ### MvTec3D-AD Dataset
@@ -33,7 +33,6 @@ python tools/preprocessing.py DATASET_PATH
 ```
 Divided the point cloud into multiple local patches for each instance.<br/>
 ```
-# This is just for building memory and inference.
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
 ```
 *Make sure the order of execution of preprocessing.py is before cut_patches.py.* <br/>
@@ -42,7 +41,6 @@ python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH
 There is the best checkpoint of the 3D expert model in ```checkpoint/best_ckpt/ckpt_000601.pth```, and you can skip this step. Alternatively, you can train the 3D expert model on your own. So, you need to execute the following commands to get the required training patches which are contained the noise points.<br/>
 *Recommend setting the ```save_grid_path``` in the same directory as above.*
 ```
-# This is for training 3D expert model.
 python cut_patches.py --datasets_path DATASET_PATH --save_grid_path GRID_PATH --pretrain
 ```
 then,
