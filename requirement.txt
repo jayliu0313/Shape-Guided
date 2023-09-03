@@ -9,6 +9,7 @@ scikit-learn
 scikit-image
 scipy
 sklearn
+tabulate
 tifffile
 timm
 tqdm
