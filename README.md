@@ -54,6 +54,7 @@ python train_3Dmodel.py --grid_path data/ --ckpt_path "./checkpoint"
 
 ### Buid Memory and Inference
 The result will be stored in the output directory.
+You can use "--vis" to visualize our result of the heat map. 
 ```
 python main.py --datasets_path DATASET_PATH --grid_path data/ --ckpt_path "checkpoint/best_ckpt/ckpt_000601.pth"
 ```
